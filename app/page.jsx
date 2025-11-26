@@ -381,7 +381,7 @@ const SurveyApp = () => {
         sessionStorage.setItem('surveyNome', currentResponse.nome);
       }
       
-      router.push('/servey/obrigado');
+      router.push('/obrigado');
     } catch (error) {
       console.error('Erro ao processar:', error);
       const errorMessage = error.message || 'Ocorreu um erro ao processar suas respostas. Por favor, tente novamente.';
