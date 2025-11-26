@@ -53,7 +53,7 @@ export default function ObrigadoPage() {
           <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
           <p className="text-gray-600 mb-4">Carregando seu relatório...</p>
           <button
-            onClick={() => router.push('/servey')}
+            onClick={() => router.push('/')}
             className="text-blue-600 hover:text-blue-700 underline"
           >
             Voltar ao questionário
@@ -175,7 +175,7 @@ export default function ObrigadoPage() {
             Entre em contato conosco para uma consultoria personalizada
           </p>
           <button
-            onClick={() => router.push('/servey')}
+            onClick={() => router.push('/')}
             className="bg-white text-indigo-600 px-8 py-3 rounded-xl font-semibold hover:bg-gray-100 transition-all shadow-lg"
           >
             Fazer Novo Diagnóstico
