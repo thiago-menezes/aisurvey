@@ -10,28 +10,31 @@ const SurveyApp = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [validationError, setValidationError] = useState('');
   const [currentResponse, setCurrentResponse] = useState({
+    // Familiaridade com IA
+    familiaridadeIA: '',
+
     // Contexto do Negócio
     setor: '',
     porte: '',
     objetivoEstrategico: '',
     diferencialCompetitivo: '',
-    
+
     // Dores e Gargalos
     atividadesConsomemTempo: [],
     satisfacaoInformacoes: 3,
     desperdicioRecursos: '',
     areaGargalos: '',
     frequenciaRetrabalho: 3,
-    
+
     // Experiência com IA
     usaIA: '',
     barreiraIA: '',
     liderancaIA: '',
-    
+
     // Questões Abertas
     problemaPrincipal: '',
     comentariosAdicionais: '',
-    
+
     // Lead
     nome: '',
     email: '',
@@ -39,6 +42,24 @@ const SurveyApp = () => {
   });
 
   const steps = [
+    {
+      title: 'Familiaridade com IA',
+      icon: MessageSquare,
+      questions: [
+        {
+          id: 'familiaridadeIA',
+          label: 'Qual o seu nível de familiaridade com ferramentas de Inteligência Artificial?',
+          type: 'select',
+          options: [
+            'Não tenho familiaridade nenhuma',
+            'Uso apenas para fins pessoais (fora do trabalho)',
+            'Minha empresa já está iniciando o uso de IA',
+            'Minha empresa já utiliza várias ferramentas de IA'
+          ],
+          required: true
+        }
+      ]
+    },
     {
       title: 'Contexto do Negócio',
       icon: Building2,
@@ -334,7 +355,7 @@ const SurveyApp = () => {
 
   const handleSubmit = async () => {
     setIsLoading(true);
-    
+
     const surveyData = {
       ...currentResponse,
       timestamp: new Date().toISOString()
@@ -343,51 +364,13 @@ const SurveyApp = () => {
     // Enviar para webhook
     await sendToWebhook(surveyData);
 
-    try {
-      // Chamar API do Gemini para análise
-      const response = await fetch('/api/gemini', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(surveyData),
-      });
-
-      const responseData = await response.json();
-
-      if (!response.ok) {
-        const errorMessage = responseData.error || `Erro ${response.status}: ${response.statusText}`;
-        console.error('Erro na API:', errorMessage, responseData);
-        throw new Error(errorMessage);
-      }
-
-      // Verificar se a resposta contém erro
-      if (responseData.error) {
-        console.error('Erro na resposta:', responseData.error);
-        throw new Error(responseData.error);
-      }
-
-      const analysis = responseData;
-      
-      // Validar estrutura básica da análise
-      if (!analysis.problemasIdentificados || !analysis.ferramentasRecomendadas || !analysis.proximosPassos) {
-        console.error('Estrutura de análise inválida:', analysis);
-        throw new Error('Resposta da análise em formato inválido');
-      }
-      
-      // Salvar análise no sessionStorage para recuperar na página de obrigado
-      if (typeof window !== 'undefined') {
-        sessionStorage.setItem('surveyAnalysis', JSON.stringify(analysis));
-        sessionStorage.setItem('surveyNome', currentResponse.nome);
-      }
-      
-      router.push('/obrigado');
-    } catch (error) {
-      console.error('Erro ao processar:', error);
-      const errorMessage = error.message || 'Ocorreu um erro ao processar suas respostas. Por favor, tente novamente.';
-      alert(errorMessage);
-      setIsLoading(false);
+    // Salvar apenas o nome no sessionStorage
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('surveyNome', currentResponse.nome);
     }
+
+    setIsLoading(false);
+    router.push('/obrigado');
   };
 
   const renderQuestion = (question) => {
@@ -526,7 +509,7 @@ const SurveyApp = () => {
         {/* Header */}
         <div className="text-center mb-8 animate-fade-in">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-3">
-            Diagnóstico de Oportunidades em IA
+            Pesquisa sobre IA nas Empresas
           </h1>
           <p className="text-lg text-gray-600">
             Descubra quais problemas a IA pode resolver na sua empresa
